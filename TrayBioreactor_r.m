@@ -17,6 +17,8 @@ tic
     % g:    gas
     % ds:   dry solids
     % da:   dry air
+    
+% Geometry: rectangular
 
 % Parameters given by the user
 
@@ -28,7 +30,7 @@ tic
     par.T=Input(2);
     % Weight of dry solids to ferment  $kg$
     par.Wds=Input(3);
-    % Diameter of the bioreactor $m$
+    % Width of the bioreactor $m$
     par.D=Input(4);
     % Length of the bioreactor $m$
     par.L=Input(5);
@@ -49,30 +51,12 @@ tic
     % Carbon dioxide concentration in the headspace $%v/v$
     par.C_air=Input(13); 
 
-% Parameters associated with the geometry 
-
-    % Radius of the bioreactor $m$
-    par.R=par.D/2;    
+% Parameters associated with the geometry (Rectangular)
+    
     % Volume of the bed $m^3$
-    par.Vb=par.Wds*(1/par.rho_s)*(1/(1-par.epsilon));
-    
-    % Trigonometric calculations 
-    
-        % Distance between the center of the circumference and the surface of the bed
-        syms d 
-        eqn1=par.R^2/2*(2*acos(d/par.R)-sin(2*acos(d/par.R)))*par.L==par.Vb;    
-        d=vpasolve(eqn1, d); d=double(d);
-        % Central angle
-        theta=2*acos(d/par.R);
-        % Arc length occupied by the bed
-        S_b=par.R*theta;
-        % Arc length occupied by the headspace
-        S_h=2*pi*par.R-S_b;
-        % Chord length
-        c=2*par.R*sin(theta/2);
-    
+    par.Vb=par.Wds*(1/par.rho_s)*(1/(1-par.epsilon));  
     % Height of the bed $m$
-    par.Height=par.R-d;
+    par.Height=par.Vb/(par.D*par.L);
     % Cross-sectional area of the flow channel $m^2$
     Acs=(pi*par.R^2)-(par.R^2/2*(theta-sin(theta)));
     % Perimeter of the flow channel $m$
